@@ -17,4 +17,25 @@ class WildController extends AbstractController
             'website' => 'Wild Séries',
         ]);
     }
+
+    /**
+     * @Route("/wild/show/{slug}",
+     *     defaults={"slug"="Aucune série sélectionnée, veuillez choisir une série"},
+     *     name="wild_show"
+     * )
+     */
+    public function show(string $slug) :Response
+    {
+        if (strpos($slug,"_") || strtolower($slug) != $slug) {
+            return $this->render('wild/index.html.twig', [
+                'website' => "Erreur 404",
+            ]);
+        } else {
+            $slug = ucwords(implode(" ", explode("-", $slug)));
+
+            return $this->render('wild/show.html.twig', [
+                'slug' => $slug,
+            ]);
+        }
+    }
 }
