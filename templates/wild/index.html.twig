@@ -4,15 +4,23 @@
 
 {% block body %}
     <h1>Toutes les séries de la table program : </h1>
+    <div class="container">
     {% for program in programs %}
-        <div>
-            <h2>{{ loop.index }} / {{ program.title }} - Catégorie : {{ program.category.name }}</h2>
-            <p>{{ program.summary }}</p>
+        <div class="col-10 col-md-10 row m-2">
+            <div>
+                <img src="{{ program.poster }}" class="thumbnail" height="150px">
+            </div>
+            <div class="ml-2 col-md-8">
+                <h2 class="text-left"><a href="{{ path('wild_show', { 'slug':slugs[loop.index0] }) }}">{{ loop.index }} / {{ program.title }}</a></h2>
+                <h6>Catégorie : <a href="{{ path('show_category', { 'categoryName':program.category.name }) }}">{{ program.category.name }}</a></h6>
+                <p class="text-justify">{{ program.summary }}</p>
+            </div>
         </div>
     {% else %}
         Aucune série trouvée.
     {% endfor %}
-    <a href="{{ path('app_index') }}">
+    </div>
+    <a href="{{ path('wild_index') }}">
         Retour à l'accueil
     </a>
 {% endblock %}

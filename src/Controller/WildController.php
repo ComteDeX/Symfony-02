@@ -10,6 +10,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class WildController extends AbstractController
 {
+    private function unslugify($slug):string
+    {
+        $slug = preg_replace(
+            '/-/',
+            ' ', ucwords(trim(strip_tags($slug)), "-")
+        );
+        return $slug;
+    }
+
+    private function slugify($programs) :array
+    {
+        $slugs=[];
+        foreach ($programs as $key => $value) {
+            $slugs[$key] = preg_replace(
+                '/ /',
+                '-', strtolower(trim(strip_tags($value->getTitle())))
+            );
+        }
+
+        return $slugs;
+    }
+
     /**
      * @Route("/wild", name="wild_index")
      */
@@ -25,9 +47,12 @@ class WildController extends AbstractController
             );
         }
 
+        $slugs =  $this->slugify($programs);
+
         return $this->render(
             'wild/index.html.twig', [
-            'programs' => $programs,
+            'programs'  => $programs,
+            'slugs'     => $slugs,
         ]);
     }
 
@@ -44,10 +69,9 @@ class WildController extends AbstractController
             throw $this
                 ->createNotFoundException('No slug has been sent to find a program in program\'s table.');
         }
-        $slug = preg_replace(
-            '/-/',
-            ' ', ucwords(trim(strip_tags($slug)), "-")
-        );
+
+        $slug = $this->unslugify($slug);
+
         $program = $this->getDoctrine()
             ->getRepository(Program::class)
             ->findOneBy(['title' => mb_strtolower($slug)]);
@@ -96,10 +120,47 @@ class WildController extends AbstractController
             );
         }
 
+        $slugs = $this->slugify($programs);
+
         return $this->render(
             'wild/category.html.twig', [
             'category' => $category->getName(),
             'programs' => $programs,
+            'slugs'     => $slugs,
+        ]);
+    }
+
+    /**
+     * Getting a program with a formatted slug for title
+     *
+     * @param string $slug The slugger
+     * @Route("/showByProgram/{slug<^[a-z0-9-]+$>}", defaults={"slug" = null}, name="showByProgram")
+     * @return Response
+     */
+    public function showByProgram() :Response
+    {
+        if (!$slug) {
+            throw $this
+                ->createNotFoundException('No slug has been sent to find a program in program\'s table.');
+        }
+        $slug = preg_replace(
+            '/-/',
+            ' ', ucwords(trim(strip_tags($slug)), "-")
+        );
+
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findOneBy(['title' => mb_strtolower($slug)]);
+        if (!$program) {
+            throw $this->createNotFoundException(
+                'No program with '.$slug.' title, found in program\'s table.'
+            );
+        }
+
+        return $this->render(
+            'wild/showByProgram.html.twig' , [
+            'program' => $program,
+            'slug'  => $slug,
         ]);
     }
 }

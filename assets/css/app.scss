@@ -1,13 +1,18 @@
 // assets/css/app.scss
 
+// the ~ allows you to reference things in node_modules
+@import "~bootstrap/scss/bootstrap";
+
 // customize some Bootstrap variables
 $theme-colors: (
         "primary": #0D99CE,
         "danger": #FF8806
 );
-// the ~ allows you to reference things in node_modules
-@import "~bootstrap/scss/bootstrap";
 
 body {
     background-color: get($theme-colors, "primary");
+}
+
+.thumbnail {
+    height: 150px;
 }
