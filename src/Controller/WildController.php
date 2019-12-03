@@ -4,38 +4,17 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Program;
+use App\Services\SlugifyService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class WildController extends AbstractController
 {
-    private function unslugify($slug):string
-    {
-        $slug = preg_replace(
-            '/-/',
-            ' ', ucwords(trim(strip_tags($slug)), "-")
-        );
-        return $slug;
-    }
-
-    private function slugify($programs) :array
-    {
-        $slugs=[];
-        foreach ($programs as $key => $value) {
-            $slugs[$key] = preg_replace(
-                '/ /',
-                '-', strtolower(trim(strip_tags($value->getTitle())))
-            );
-        }
-
-        return $slugs;
-    }
-
     /**
-     * @Route("/wild", name="wild_index")
+     * @Route("/", name="wild_index")
      */
-    public function index() :Response
+    public function index(SlugifyService $slugifyService) : Response
     {
         $programs = $this->getDoctrine()
             ->getRepository(Program::class)
@@ -46,8 +25,8 @@ class WildController extends AbstractController
                 'No program found in program\'s table.'
             );
         }
-
-        $slugs =  $this->slugify($programs);
+        $slugs = $slugifyService->multiSlugify($programs);
+        //$slugs =  $this->slugify($programs);
 
         return $this->render(
             'wild/index.html.twig', [
@@ -63,14 +42,15 @@ class WildController extends AbstractController
      * @Route("/show/{slug<^[a-z0-9-]+$>}", defaults={"slug" = null}, name="wild_show")
      * @return Response
      */
-    public function show(?string $slug):Response
+    public function show(?string $slug, SlugifyService $slugifyService):Response
     {
         if (!$slug) {
             throw $this
                 ->createNotFoundException('No slug has been sent to find a program in program\'s table.');
         }
 
-        $slug = $this->unslugify($slug);
+//        $slug = $this->unslugify($slug);
+        $slug = $slugifyService->unslugify($slug);
 
         $program = $this->getDoctrine()
             ->getRepository(Program::class)
@@ -94,7 +74,7 @@ class WildController extends AbstractController
      * @Route("wild/category/{categoryName}", name="show_category")
      * @return Response
      */
-    public function showByCategory(string $categoryName)
+    public function showByCategory(string $categoryName, SlugifyService $slugifyService)
     {
         if (!$categoryName) {
             throw $this
@@ -120,7 +100,7 @@ class WildController extends AbstractController
             );
         }
 
-        $slugs = $this->slugify($programs);
+        $slugs = $slugifyService->multiSlugify($programs);
 
         return $this->render(
             'wild/category.html.twig', [
