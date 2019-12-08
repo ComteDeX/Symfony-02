@@ -3,7 +3,7 @@
 {% block title %}All programs{% endblock %}
 
 {% block body %}
-    <h1>Toutes les séries de la table program : </h1>
+    <h1 class="text-center">Toutes les séries : </h1>
     <div class="container">
     {% for program in programs %}
         <div class="col-10 col-md-10 row m-2">
@@ -19,6 +19,17 @@
     {% else %}
         Aucune série trouvée.
     {% endfor %}
+{#        {{ form_start(formCat) }}#}
+{#        {{ form_row(formCat) }}#}
+{#        <button class="btn-primary btn" type="submit" name="btnSearch">Rechercher</button>#}
+{#        {{ form_end(formCat) }}#}
+
+{#        <hr>#}
+        {{ form_start(formSearch) }}
+        {{ form_row(formSearch) }}
+            <button class="btn-primary btn" type="submit" name="btnSearch">Rechercher</button>
+        {{ form_end(formSearch) }}
+
     </div>
     <a href="{{ path('wild_index') }}">
         Retour à l'accueil

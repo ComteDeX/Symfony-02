@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une catégorie{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="col-md-6">
+        {% for category in categories %}
+            {{ category.name }}<br/>
+
+        {% endfor %}
+        </div>
+
+
+
+    {{ form_start(form) }}
+    {{ form_row(form) }}
+        <button class="btn-primary btn" type="submit" name="btnSearch">Ajouter la catégorie</button>
+    {{ form_end(form) }}
+
+    </div>
+{% endblock %}

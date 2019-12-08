@@ -3,16 +3,21 @@
 {% block title %}{{ slug }}{% endblock %}
 
 {% block body %}
-
-    <div class="media">
-        <img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
+<div class="row">
+    <div class="media col-2 justify-content-center">
+        <img class="align-self-start m-3 thumbnail" src="{{program.poster}}" alt="{{ program.title }} poster">
+    </div>
+    <div class="season col-10">
         <div class="media-body">
             <h1 class="mt-0">{{ program.title }}</h1>
             <p>{{ program.summary }}</p>
-            <p>Categorie : {{ program.category.name }}</p>
+            <h6>Catégorie : <a href="{{ path('show_category', { 'categoryName':program.category.name }) }}">{{ program.category.name }}</a></h6>
         </div>
+        {% for season in seasons %}
+            <a href="{{ path('wild_showBySeason', {'id' : season.id }) }}">{{ season.number }} - {{ season.year }} : {{ season.description | slice(0,50) }}…</a><br/>
+        {% endfor %}
     </div>
-
+</div>
     <a href="{{ path('wild_index') }}">
         Retour à l'accueil
     </a>

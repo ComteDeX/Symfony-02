@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All programs{% endblock %}
+
+{% block body %}
+    <h1>Toutes les séries de la table program : </h1>
+    <div class="container">
+    {% for category in categories %}
+        <div class="col-10 col-md-10 row m-2">
+            <div class="ml-2 col-md-8">
+                <h2 class="text-left"><a href="{{ path('show_category', { 'categoryName':category.name }) }}">{{ category.name }}</a></h2>
+            </div>
+        </div>
+    {% else %}
+        Aucune catégorie trouvée.
+    {% endfor %}
+    </div>
+    <a href="{{ path('wild_index') }}">
+        Retour à l'accueil
+    </a>
+{% endblock %}
