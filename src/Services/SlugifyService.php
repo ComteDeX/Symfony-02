@@ -6,7 +6,7 @@ namespace App\Services;
 
 class SlugifyService
 {
-    public function unslugify($slug):string
+    public static function unslugify($slug):string
     {
         $slug = preg_replace(
             '/-/',
@@ -15,7 +15,7 @@ class SlugifyService
         return $slug;
     }
 
-    public function slugify(string $title) :string
+    public static function slugify(string $title) :string
     {
         $slug = preg_replace(
             '/ /',
@@ -25,17 +25,12 @@ class SlugifyService
         return $slug;
     }
 
-    public function multiSlugify($programs) :array
+    public static function multiSlugify($programs) :array
     {
         $slugs=[];
-/*        foreach ($programs as $key => $value) {
-            $slugs[$key] = preg_replace(
-                '/ /',
-                '-', strtolower(trim(strip_tags($value->getTitle())))
-            );
-        }*/
+
         foreach ($programs as $key => $value) {
-            $slugs[$key] = $this->slugify($value->getTitle());
+            $slugs[$key] = SlugifyService::slugify($value->getTitle());
         }
         return $slugs;
     }

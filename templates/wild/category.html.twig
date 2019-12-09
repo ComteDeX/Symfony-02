@@ -11,7 +11,7 @@
             </div>
             <div class="ml-2 col-md-8">
                 <h2 class="text-left"><a href="{{ path('wild_show', { 'slug':slugs[loop.index0] }) }}">{{ program.title }}</a></h2>
-                <h6>Catégorie : <a href="{{ path('show_category', { 'categoryName':program.category.name }) }}">{{ program.category.name }}</a></h6>
+                <h6>Catégorie : <a href="{{ path('show_category', { 'categoryName':category }) }}">{{ category }}</a></h6>
                 <p class="text-justify">{{ program.summary }}</p>
             </div>
         </div>

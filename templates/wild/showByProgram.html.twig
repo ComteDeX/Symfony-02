@@ -11,10 +11,16 @@
         <div class="media-body">
             <h1 class="mt-0">{{ program.title }}</h1>
             <p>{{ program.summary }}</p>
-            <h6>Catégorie : <a href="{{ path('show_category', { 'categoryName':program.category.name }) }}">{{ program.category.name }}</a></h6>
+            <h4>Catégorie : <a href="{{ path('show_category', { 'categoryName':program.category.name }) }}">{{ program.category.name }}</a></h4>
         </div>
-        {% for season in seasons %}
-            <a href="{{ path('wild_showBySeason', {'id' : season.id }) }}">{{ season.number }} - {{ season.year }} : {{ season.description | slice(0,50) }}…</a><br/>
+        <ul>
+        {% for season in program.seasons %}
+            <li><a href="{{ path('wild_showBySeason', {'id' : season.id }) }}">{{ season.number }} - {{ season.year }} : {{ season.description | slice(0,50) }}…</a></li>
+            <ul>
+            {% for episode in season.episodes %}
+                    <li><a href="{{ path('wild_showByEpisode', {'id' : episode.id }) }}">{{ episode.number }} - {{ episode.title }}</a><br/></li>
+            {% endfor %}
+            </ul>
         {% endfor %}
     </div>
 </div>
